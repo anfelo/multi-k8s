@@ -2,10 +2,14 @@
 on:
   pull_request:
     paths:
-    - app/**
+    - client/**
+    - server/**
+    - worker/**
   push:
     paths:
-    - app/**
+    - client/**
+    - server/**
+    - worker/**
     branches:         # array of glob patterns matching against refs/heads. Optional; defaults to all
     - main          # triggers on pushes that contain changes in main
 
