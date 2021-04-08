@@ -57,19 +57,19 @@ jobs:
           docker build \
             -t $CLIENT_CONTAINER_IMAGE:latest \
             -t $CLIENT_CONTAINER_IMAGE:${{ github.sha }} \
-            -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CLIENT_CONTAINER_IMAGE \
+            -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CLIENT_CONTAINER_IMAGE:${{ github.sha }} \
             -f ./client/Dockerfile ./client
             
             docker build \
             -t $SERVER_CONTAINER_IMAGE:latest \
             -t $SERVER_CONTAINER_IMAGE:${{ github.sha }} \
-            -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$SERVER_CONTAINER_IMAGE \
+            -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$SERVER_CONTAINER_IMAGE:${{ github.sha }} \
             -f ./server/Dockerfile ./server
             
             docker build \
             -t $WORKER_CONTAINER_IMAGE:latest \
             -t $WORKER_CONTAINER_IMAGE:${{ github.sha }} \
-            -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$WORKER_CONTAINER_IMAGE \
+            -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$WORKER_CONTAINER_IMAGE:${{ github.sha }} \
             -f ./worker/Dockerfile ./worker
 
       # Add additional steps here like scanning of image
