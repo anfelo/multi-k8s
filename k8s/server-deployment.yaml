@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: stephengrider/multi-server
+          image: 407736645023.dkr.ecr.us-east-1.amazonaws.com/multi-server
           ports:
             - containerPort: 5000
           env:
