@@ -19,7 +19,7 @@ function App() {
           >
             Learn React 3
           </a>
-          <h1>Hello AWS</h1>
+          <h1>Hello AWS try#3</h1>
           <Link to="/">Home</Link>
           <Link to="/otherpage">Other Page</Link>
         </header>
