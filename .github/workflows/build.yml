@@ -29,6 +29,7 @@ jobs:
   build-and-push:
     name: Build and deploy
     runs-on: ubuntu-latest
+    environment: prod
     steps:
       - name: Checkout
         uses: actions/checkout@main
