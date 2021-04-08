@@ -2,16 +2,16 @@
 on:
   pull_request:
     paths:
-    - client/**
-    - server/**
-    - worker/**
+      - client/**
+      - server/**
+      - worker/**
   push:
     paths:
-    - client/**
-    - server/**
-    - worker/**
-    branches:         # array of glob patterns matching against refs/heads. Optional; defaults to all
-    - main          # triggers on pushes that contain changes in main
+      - client/**
+      - server/**
+      - worker/**
+    branches: # array of glob patterns matching against refs/heads. Optional; defaults to all
+      - main # triggers on pushes that contain changes in main
 
 name: Build and Push to ECR
 
@@ -30,44 +30,43 @@ jobs:
     name: Build and deploy
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@main
 
-    - name: Checkout
-      uses: actions/checkout@main
+      # Add steps here like linting, testing, minification, etc.
 
-    # Add steps here like linting, testing, minification, etc.
-      
-    - name: Setup ECR
-      run: |
-        # Login to AWS ECR
-        $( aws ecr get-login --no-include-email )
-    - name: Build and tag the image
-      run: |
-        # Build and tag the image
-        docker build \
-          -t $CLIENT_CONTAINER_IMAGE:latest \
-          -t $CLIENT_CONTAINER_IMAGE:${{ github.sha }} \
-          -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CLIENT_CONTAINER_IMAGE \
-          -f ./client/Dockerfile ./client
-          
+      - name: Setup ECR
+        run: |
+          # Login to AWS ECR
+          $(aws ecr get-login --no-include-email --region us-east-1)
+      - name: Build and tag the image
+        run: |
+          # Build and tag the image
           docker build \
-          -t $SERVER_CONTAINER_IMAGE:latest \
-          -t $SERVER_CONTAINER_IMAGE:${{ github.sha }} \
-          -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$SERVER_CONTAINER_IMAGE \
-          -f ./server/Dockerfile ./server
-          
-          docker build \
-          -t $WORKER_CONTAINER_IMAGE:latest \
-          -t $WORKER_CONTAINER_IMAGE:${{ github.sha }} \
-          -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$WORKER_CONTAINER_IMAGE \
-          -f ./worker/Dockerfile ./worker
-           
-    # Add additional steps here like scanning of image
+            -t $CLIENT_CONTAINER_IMAGE:latest \
+            -t $CLIENT_CONTAINER_IMAGE:${{ github.sha }} \
+            -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CLIENT_CONTAINER_IMAGE \
+            -f ./client/Dockerfile ./client
+            
+            docker build \
+            -t $SERVER_CONTAINER_IMAGE:latest \
+            -t $SERVER_CONTAINER_IMAGE:${{ github.sha }} \
+            -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$SERVER_CONTAINER_IMAGE \
+            -f ./server/Dockerfile ./server
+            
+            docker build \
+            -t $WORKER_CONTAINER_IMAGE:latest \
+            -t $WORKER_CONTAINER_IMAGE:${{ github.sha }} \
+            -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$WORKER_CONTAINER_IMAGE \
+            -f ./worker/Dockerfile ./worker
 
-    # Only push to registry on main
-    - name: Push
-      if: github.ref == 'refs/heads/main'
-      run: |
-        # Push image to AWS ECR
-        docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CLIENT_CONTAINER_IMAGE
-        docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$SERVER_CONTAINER_IMAGE
-        docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$WORKER_CONTAINER_IMAGE
+      # Add additional steps here like scanning of image
+
+      # Only push to registry on main
+      - name: Push
+        if: github.ref == 'refs/heads/main'
+        run: |
+          # Push image to AWS ECR
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CLIENT_CONTAINER_IMAGE
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$SERVER_CONTAINER_IMAGE
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$WORKER_CONTAINER_IMAGE
