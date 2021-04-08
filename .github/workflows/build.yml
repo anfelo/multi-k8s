@@ -11,7 +11,7 @@ on:
       - server/**
       - worker/**
     branches: # array of glob patterns matching against refs/heads. Optional; defaults to all
-      - main # triggers on pushes that contain changes in main
+      - master # triggers on pushes that contain changes in master
 
 name: Build and Push to ECR
 
@@ -32,7 +32,7 @@ jobs:
     environment: prod
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@master
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -74,9 +74,9 @@ jobs:
 
       # Add additional steps here like scanning of image
 
-      # Only push to registry on main
+      # Only push to registry on master
       - name: Push
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         run: |
           # Push image to AWS ECR
           docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CLIENT_CONTAINER_IMAGE:${{ github.sha }}
